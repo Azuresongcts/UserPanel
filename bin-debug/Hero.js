@@ -46,7 +46,7 @@ var User = (function () {
             var result = 0;
             var heros = this.getheroInTeam();
             this.heros.forEach(function (e) { return result += e.FightPower; });
-            result = parseInt("result/150");
+            result = result / 150;
             return result;
         }
     );
@@ -59,6 +59,92 @@ var User = (function () {
     return User;
 }());
 egret.registerClass(User,'User');
+var EquipmentMap = (function () {
+    function EquipmentMap(stage) {
+        this.head = new egret.Bitmap();
+        this.neck = new egret.Bitmap();
+        this.shoulder = new egret.Bitmap();
+        this.body = new egret.Bitmap();
+        this.weapon = new egret.Bitmap();
+        this.shield = new egret.Bitmap();
+        this.setBackMap();
+        stage.addChild(this.head);
+        stage.addChild(this.neck);
+        stage.addChild(this.shoulder);
+        stage.addChild(this.body);
+        stage.addChild(this.weapon);
+        stage.addChild(this.shield);
+    }
+    var d = __define,c=EquipmentMap,p=c.prototype;
+    p.setBackMap = function () {
+        this.weapon.texture = RES.getRes(equipmentBackMapConfig[equipmentType.WEAPON].image);
+        this.weapon.x = equipmentBackMapConfig[equipmentType.WEAPON].x;
+        this.weapon.y = equipmentBackMapConfig[equipmentType.WEAPON].y;
+        this.shield.texture = RES.getRes(equipmentBackMapConfig[equipmentType.SHIELD].image);
+        this.shield.x = equipmentBackMapConfig[equipmentType.SHIELD].x;
+        this.shield.y = equipmentBackMapConfig[equipmentType.SHIELD].y;
+        this.head.texture = RES.getRes(equipmentBackMapConfig[equipmentType.HEAD].image);
+        this.head.x = equipmentBackMapConfig[equipmentType.HEAD].x;
+        this.head.y = equipmentBackMapConfig[equipmentType.HEAD].y;
+        this.neck.texture = RES.getRes(equipmentBackMapConfig[equipmentType.NECK].image);
+        this.neck.x = equipmentBackMapConfig[equipmentType.NECK].x;
+        this.neck.y = equipmentBackMapConfig[equipmentType.NECK].y;
+        this.shoulder.texture = RES.getRes(equipmentBackMapConfig[equipmentType.SHOULDER].image);
+        this.shoulder.x = equipmentBackMapConfig[equipmentType.SHOULDER].x;
+        this.shoulder.y = equipmentBackMapConfig[equipmentType.SHOULDER].y;
+        this.body.texture = RES.getRes(equipmentBackMapConfig[equipmentType.BODY].image);
+        this.body.x = equipmentBackMapConfig[equipmentType.BODY].x;
+        this.body.y = equipmentBackMapConfig[equipmentType.BODY].y;
+    };
+    p.equip = function (equipment) {
+        var image; //equipment.property.configId
+        for (var i = 0; i < equipmentMapConfig.length; i++) {
+            if (equipmentMapConfig[i].configId == equipment.equipmentID.configId) {
+                image = equipmentMapConfig[i].image;
+                break;
+            }
+        }
+        switch (equipment.equipmentID.equipmentType) {
+            case equipmentType.HEAD:
+                this.head.texture = RES.getRes(image);
+                break;
+            case equipmentType.NECK:
+                this.neck.texture = RES.getRes(image);
+                break;
+            case equipmentType.SHOULDER:
+                this.shoulder.texture = RES.getRes(image);
+                break;
+            case equipmentType.BODY:
+                this.body.texture = RES.getRes(image);
+                break;
+            case equipmentType.WEAPON:
+                this.weapon.texture = RES.getRes(image);
+                break;
+            case equipmentType.SHIELD:
+                this.shield.texture = RES.getRes(image);
+                break;
+            default:
+                console.log("fail");
+        }
+    };
+    return EquipmentMap;
+}());
+egret.registerClass(EquipmentMap,'EquipmentMap');
+var HeroMap = (function () {
+    function HeroMap(stage) {
+        this.hero = new egret.Bitmap();
+        this.setBackMap();
+        stage.addChild(this.hero);
+    }
+    var d = __define,c=HeroMap,p=c.prototype;
+    p.setBackMap = function () {
+        this.hero.texture = RES.getRes(HeroBackMapConfig[0].image);
+        this.hero.x = HeroBackMapConfig[0].x;
+        this.hero.y = HeroBackMapConfig[0].y;
+    };
+    return HeroMap;
+}());
+egret.registerClass(HeroMap,'HeroMap');
 var Hero = (function () {
     function Hero(type) {
         var _this = this;
@@ -223,6 +309,16 @@ var Hero = (function () {
             this.equipments.forEach(function (e) { return result += e.FightPower; });
             result += this.attack * 1.5 + this.defence + (this.maxhp + this.maxmp * 0.5) * 0.5;
             return result;
+        }
+    );
+    d(p, "maxHp"
+        ,function () {
+            return this.level * 50;
+        }
+    );
+    d(p, "maxMp"
+        ,function () {
+            return this.intelligence * 40;
         }
     );
     __decorate([

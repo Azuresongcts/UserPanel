@@ -158,13 +158,16 @@ class Main extends egret.DisplayObjectContainer {
 
 
         var user = new User();
+        var panel = new  HeroPanel();
 
         user.heros.push(hero1);
 
         user.heros[0].setInTeam(true);
         user.heros[0].level = 2;
 
-        console.log(user.FightPower);
+        this.addChild(panel);
+
+        panel.setHero(hero1);
 
     }
 

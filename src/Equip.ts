@@ -79,6 +79,8 @@ class Weapen implements Equipment{
 
 	weight:number=1;
 
+	public equipmentID:WeaponProperty;
+
 	strength:number = 0;
 	agility:number = 0;
 	intelligence:number = 0;
@@ -153,6 +155,8 @@ class Equip implements Equipment{
 	quality:number = 1;
 
 	weight:number=1;
+
+	public equipmentID:EquipProperty;
 
 	strength:number = 0;
 	agility:number = 0;
