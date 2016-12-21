@@ -1,8 +1,6 @@
 // TypeScript file
 var heroConfig = [
-
-	{basicattack:1.2,strength:1.5,agility:1.2,intelligence:1,endurance:1.2},
-	{basicattack:1.5,strength:1,agility:1,intelligence:4,endurance:0.7}
+	{id:"hero_1",name:"贝力亚鲁",icattack:1.5,attack:1,strength:1,agility:1,intelligence:4,endurance:0.7}
 
 ]
 var jewelConfig = [
@@ -74,7 +72,7 @@ var posConfig = [
 
 var HeroBackMapConfig = [
 
-	{image:"hero_png",x:0,y:0}
+	{image:"hero_png",x:0,y:100}
 
 ]
 
@@ -85,37 +83,18 @@ var heroMapConfig = [
 
 ]
 
-var equipmentBackMapConfig = [
-
-	{type:equipmentType.WEAPON,image:"backMap_png",x:0,y:0},
-	{type:equipmentType.SHIELD,image:"backMap_png",x:0,y:100},
-
-	{type:equipmentType.HEAD,image:"backMap_png",x:0,y:200},
-	{type:equipmentType.NECK,image:"backMap_png",x:0,y:300},
-	{type:equipmentType.SHOULDER,image:"backMap_png",x:0,y:400},
-	{type:equipmentType.BODY,image:"backMap_png",x:0,y:500}
-
-]
-
-var equipmentMapConfig = [
-
-	{configId:"weapon_0",image:"weapon_png"},
-	{configId:"shield_0",image:"shield_png"},
-	{configId:"head_0",image:"head_png"}
-
-]
 
 var heroTextConfig = [
 
-	{name:"  name:  ",x:0,y:50},
-	{name:"  attack:  ",x:0,y:100},
-	{name:"  strength:  ",x:0,y:150},
-	{name:"  agility:  ",x:0,y:200},
-	{name:"  intelligence:  ",x:0,y:250},
-	{name:"  endurance:  ",x:0,y:300},
-	{name:"  fightPower:  ",x:0,y:350},
+	{name:"  英雄姓名:  ",x:0,y:50},
+	{name:"  攻击力",x:0,y:100},
+	{name:"  力量",x:0,y:150},
+	{name:"  敏捷",x:0,y:200},
+	{name:"  智力",x:0,y:250},
+	{name:"  耐力",x:0,y:300},
+	{name:"  战斗力数值",x:0,y:350},
 
-	{name:"  HP:  ",x:200,y:100},
-	{name:"  MP:  ",x:200,y:150}
+	{name:"  生命:  ",x:200,y:100},
+	{name:"  能量:  ",x:200,y:150}
 
 ]

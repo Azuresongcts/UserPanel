@@ -45,7 +45,7 @@ var User = (function () {
         ,function () {
             var result = 0;
             var heros = this.getheroInTeam();
-            this.heros.forEach(function (e) { return result += e.FightPower; });
+            this.heros.forEach(function (e) { return result += e.fightPower; });
             result = result / 150;
             return result;
         }
@@ -67,7 +67,6 @@ var EquipmentMap = (function () {
         this.body = new egret.Bitmap();
         this.weapon = new egret.Bitmap();
         this.shield = new egret.Bitmap();
-        this.setBackMap();
         stage.addChild(this.head);
         stage.addChild(this.neck);
         stage.addChild(this.shoulder);
@@ -76,34 +75,8 @@ var EquipmentMap = (function () {
         stage.addChild(this.shield);
     }
     var d = __define,c=EquipmentMap,p=c.prototype;
-    p.setBackMap = function () {
-        this.weapon.texture = RES.getRes(equipmentBackMapConfig[equipmentType.WEAPON].image);
-        this.weapon.x = equipmentBackMapConfig[equipmentType.WEAPON].x;
-        this.weapon.y = equipmentBackMapConfig[equipmentType.WEAPON].y;
-        this.shield.texture = RES.getRes(equipmentBackMapConfig[equipmentType.SHIELD].image);
-        this.shield.x = equipmentBackMapConfig[equipmentType.SHIELD].x;
-        this.shield.y = equipmentBackMapConfig[equipmentType.SHIELD].y;
-        this.head.texture = RES.getRes(equipmentBackMapConfig[equipmentType.HEAD].image);
-        this.head.x = equipmentBackMapConfig[equipmentType.HEAD].x;
-        this.head.y = equipmentBackMapConfig[equipmentType.HEAD].y;
-        this.neck.texture = RES.getRes(equipmentBackMapConfig[equipmentType.NECK].image);
-        this.neck.x = equipmentBackMapConfig[equipmentType.NECK].x;
-        this.neck.y = equipmentBackMapConfig[equipmentType.NECK].y;
-        this.shoulder.texture = RES.getRes(equipmentBackMapConfig[equipmentType.SHOULDER].image);
-        this.shoulder.x = equipmentBackMapConfig[equipmentType.SHOULDER].x;
-        this.shoulder.y = equipmentBackMapConfig[equipmentType.SHOULDER].y;
-        this.body.texture = RES.getRes(equipmentBackMapConfig[equipmentType.BODY].image);
-        this.body.x = equipmentBackMapConfig[equipmentType.BODY].x;
-        this.body.y = equipmentBackMapConfig[equipmentType.BODY].y;
-    };
     p.equip = function (equipment) {
         var image; //equipment.property.configId
-        for (var i = 0; i < equipmentMapConfig.length; i++) {
-            if (equipmentMapConfig[i].configId == equipment.equipmentID.configId) {
-                image = equipmentMapConfig[i].image;
-                break;
-            }
-        }
         switch (equipment.equipmentID.equipmentType) {
             case equipmentType.HEAD:
                 this.head.texture = RES.getRes(image);
@@ -147,173 +120,81 @@ var HeroMap = (function () {
 egret.registerClass(HeroMap,'HeroMap');
 var Hero = (function () {
     function Hero(type) {
-        var _this = this;
-        this.level = 1;
-        this.isInTeam = false;
-        this.basicAttFactor = 1;
-        this.strFactor = 1;
-        this.agiFactor = 1;
-        this.intFactor = 1;
-        this.endFactor = 1;
         this.dirtyFlag = true;
+        this.isInTeam = false;
         this.equipments = [];
-        this.basicattackCache = function (target, propertyName, desc) {
-            if (!_this.dirtyFlag) {
-                var getter_3 = desc.get;
-                desc.get = function () {
-                    return getter_3.apply(this);
-                };
-                return desc;
-            }
-        };
-        this.maxhpCache = function (target, propertyName, desc) {
-            if (!_this.dirtyFlag) {
-                var getter_4 = desc.get;
-                desc.get = function () {
-                    return getter_4.apply(this);
-                };
-                return desc;
-            }
-        };
-        this.maxmpCache = function (target, propertyName, desc) {
-            if (!_this.dirtyFlag) {
-                var getter_5 = desc.get;
-                desc.get = function () {
-                    return getter_5.apply(this);
-                };
-                return desc;
-            }
-        };
-        this.defenceCache = function (target, propertyName, desc) {
-            if (!_this.dirtyFlag) {
-                var getter_6 = desc.get;
-                desc.get = function () {
-                    return getter_6.apply(this);
-                };
-                return desc;
-            }
-        };
-        this.strengthCache = function (target, propertyName, desc) {
-            if (!_this.dirtyFlag) {
-                var getter_7 = desc.get;
-                desc.get = function () {
-                    return getter_7.apply(this);
-                };
-                return desc;
-            }
-        };
-        this.intelligenceCache = function (target, propertyName, desc) {
-            if (!_this.dirtyFlag) {
-                var getter_8 = desc.get;
-                desc.get = function () {
-                    return getter_8.apply(this);
-                };
-                return desc;
-            }
-        };
-        this.agilityCache = function (target, propertyName, desc) {
-            if (!_this.dirtyFlag) {
-                var getter_9 = desc.get;
-                desc.get = function () {
-                    return getter_9.apply(this);
-                };
-                return desc;
-            }
-        };
-        this.enduranceCache = function (target, propertyName, desc) {
-            if (!_this.dirtyFlag) {
-                var getter_10 = desc.get;
-                desc.get = function () {
-                    return getter_10.apply(this);
-                };
-                return desc;
-            }
-        };
-        this.attackCache = function (target, propertyName, desc) {
-            if (!_this.dirtyFlag) {
-                var getter_11 = desc.get;
-                desc.get = function () {
-                    return getter_11.apply(this);
-                };
-                return desc;
-            }
-        };
-        this.fightpowerCache = function (target, propertyName, desc) {
-            if (!_this.dirtyFlag) {
-                var getter_12 = desc.get;
-                desc.get = function () {
-                    return getter_12.apply(this);
-                };
-                return desc;
-            }
-        };
-        this.basicAttFactor = heroConfig[type].basicattack;
-        this.strFactor = heroConfig[type].strength;
-        this.agiFactor = heroConfig[type].agility;
-        this.intFactor = heroConfig[type].intelligence;
-        this.endFactor = heroConfig[type].endurance;
+        this.property = new HeroProperty(heroConfig[type].id, heroConfig[type].name, heroConfig[type].attack, heroConfig[type].strength, heroConfig[type].agility, heroConfig[type].intelligence, heroConfig[type].endurance);
     }
     var d = __define,c=Hero,p=c.prototype;
     p.setInTeam = function (status) {
         this.isInTeam = status;
-        this.dirtyFlag = true;
     };
-    d(p, "basicattack"
+    p.equip = function (equipment) {
+        this.equipments.push(equipment);
+    };
+    d(p, "fightPower"
         ,function () {
-            return this.level * 3 * this.basicAttFactor;
-        }
-    );
-    d(p, "maxhp"
-        ,function () {
-            return this.level * 2 * this.endurance;
-        }
-    );
-    d(p, "maxmp"
-        ,function () {
-            return this.level * this.intelligence;
-        }
-    );
-    d(p, "defence"
-        ,function () {
-            return this.level * this.endurance * 3;
-        }
-    );
-    d(p, "strength"
-        ,function () {
-            return this.level * this.strFactor * 2;
-        }
-    );
-    d(p, "intelligence"
-        ,function () {
-            return this.level * this.intFactor * 2;
-        }
-    );
-    d(p, "agility"
-        ,function () {
-            return this.level * this.agiFactor * 2;
-        }
-    );
-    d(p, "endurance"
-        ,function () {
-            return this.level * this.endFactor * 5;
+            var result = 0;
+            this.equipments.forEach(function (equipment) {
+                result += equipment.FightPower;
+            });
+            result += this.property.fightPower;
+            return result;
         }
     );
     d(p, "attack"
         ,function () {
-            return this.basicattack + this.strength;
+            var result = 0;
+            this.equipments.forEach(function (equipment) {
+                result += equipment.attack;
+            });
+            result += this.property.basic_Attack;
+            return result;
         }
     );
-    d(p, "FightPower"
+    d(p, "strength"
         ,function () {
             var result = 0;
-            this.equipments.forEach(function (e) { return result += e.FightPower; });
-            result += this.attack * 1.5 + this.defence + (this.maxhp + this.maxmp * 0.5) * 0.5;
+            this.equipments.forEach(function (equipment) {
+                result += equipment.strength;
+            });
+            result += this.property.basic_Strength;
+            return result;
+        }
+    );
+    d(p, "agility"
+        ,function () {
+            var result = 0;
+            this.equipments.forEach(function (equipment) {
+                result += equipment.agility;
+            });
+            result += this.property.basic_Agility;
+            return result;
+        }
+    );
+    d(p, "intelligence"
+        ,function () {
+            var result = 0;
+            this.equipments.forEach(function (equipment) {
+                result += equipment.intelligence;
+            });
+            result += this.property.basic_Intelligence;
+            return result;
+        }
+    );
+    d(p, "endurance"
+        ,function () {
+            var result = 0;
+            this.equipments.forEach(function (equipment) {
+                result += equipment.endurance;
+            });
+            result += this.property.basic_Endurance;
             return result;
         }
     );
     d(p, "maxHp"
         ,function () {
-            return this.level * 50;
+            return this.endurance * 50;
         }
     );
     d(p, "maxMp"
@@ -321,36 +202,6 @@ var Hero = (function () {
             return this.intelligence * 40;
         }
     );
-    __decorate([
-        this.basicattackCache
-    ], p, "basicattack", null);
-    __decorate([
-        this.maxhpCache
-    ], p, "maxhp", null);
-    __decorate([
-        this.maxmpCache
-    ], p, "maxmp", null);
-    __decorate([
-        this.defenceCacheCache
-    ], p, "defence", null);
-    __decorate([
-        this.strengthCache
-    ], p, "strength", null);
-    __decorate([
-        this.intelligenceCache
-    ], p, "intelligence", null);
-    __decorate([
-        this.agilityCache
-    ], p, "agility", null);
-    __decorate([
-        this.enduranceCache
-    ], p, "endurance", null);
-    __decorate([
-        this.attackCache
-    ], p, "attack", null);
-    __decorate([
-        this.fightpowerCache
-    ], p, "FightPower", null);
     return Hero;
 }());
 egret.registerClass(Hero,'Hero');

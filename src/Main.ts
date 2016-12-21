@@ -163,7 +163,6 @@ class Main extends egret.DisplayObjectContainer {
         user.heros.push(hero1);
 
         user.heros[0].setInTeam(true);
-        user.heros[0].level = 2;
 
         this.addChild(panel);
 

@@ -138,7 +138,6 @@ var Main = (function (_super) {
         var panel = new HeroPanel();
         user.heros.push(hero1);
         user.heros[0].setInTeam(true);
-        user.heros[0].level = 2;
         this.addChild(panel);
         panel.setHero(hero1);
     };

@@ -30,7 +30,7 @@ class User {
 
         var heros: Hero[] = this.getheroInTeam();
 
-		this.heros.forEach(e => result += e.FightPower)
+		this.heros.forEach(e => result += e.fightPower)
 
 		result=result/150;
 
@@ -71,10 +71,10 @@ class EquipmentMap {
 
 	head:egret.Bitmap;
 	neck:egret.Bitmap;
-	shoulder:egret.Bitmap;
+	shoulder:egret.Bitmap;	
 	body:egret.Bitmap;
 	
-	weapon:egret.Bitmap;
+	weapon:egret.Bitmap;5
 	shield:egret.Bitmap;
 
 	public constructor(stage:egret.DisplayObjectContainer) {
@@ -87,8 +87,6 @@ class EquipmentMap {
 		this.weapon = new egret.Bitmap();
 		this.shield = new egret.Bitmap();
 
-		this.setBackMap();
-
 		stage.addChild(this.head);
 		stage.addChild(this.neck);
 		stage.addChild(this.shoulder);
@@ -99,52 +97,10 @@ class EquipmentMap {
 
 	}
 
-	public setBackMap() {
-
-		this.weapon.texture = RES.getRes(equipmentBackMapConfig[equipmentType.WEAPON].image);
-		this.weapon.x = equipmentBackMapConfig[equipmentType.WEAPON].x;
-		this.weapon.y = equipmentBackMapConfig[equipmentType.WEAPON].y;
-		
-
-		this.shield.texture = RES.getRes(equipmentBackMapConfig[equipmentType.SHIELD].image);
-		this.shield.x = equipmentBackMapConfig[equipmentType.SHIELD].x;
-		this.shield.y = equipmentBackMapConfig[equipmentType.SHIELD].y;
-		
-
-		this.head.texture = RES.getRes(equipmentBackMapConfig[equipmentType.HEAD].image);
-		this.head.x = equipmentBackMapConfig[equipmentType.HEAD].x;
-		this.head.y = equipmentBackMapConfig[equipmentType.HEAD].y;
-		
-
-		this.neck.texture = RES.getRes(equipmentBackMapConfig[equipmentType.NECK].image);
-		this.neck.x = equipmentBackMapConfig[equipmentType.NECK].x;
-		this.neck.y = equipmentBackMapConfig[equipmentType.NECK].y;
-		
-
-		this.shoulder.texture = RES.getRes(equipmentBackMapConfig[equipmentType.SHOULDER].image);
-		this.shoulder.x = equipmentBackMapConfig[equipmentType.SHOULDER].x;
-		this.shoulder.y = equipmentBackMapConfig[equipmentType.SHOULDER].y;
-		
-
-		this.body.texture = RES.getRes(equipmentBackMapConfig[equipmentType.BODY].image);
-		this.body.x = equipmentBackMapConfig[equipmentType.BODY].x;
-		this.body.y = equipmentBackMapConfig[equipmentType.BODY].y;
-		
-
-	}
 
 	public equip(equipment:Equipment) {
 		
 		var image:string;//equipment.property.configId
-
-		for(var i = 0; i < equipmentMapConfig.length; i++) {
-
-			if(equipmentMapConfig[i].configId == equipment.equipmentID.configId) {
-				image = equipmentMapConfig[i].image;
-				break;
-			}
-
-		}
 
 		switch(equipment.equipmentID.equipmentType) {
 			
@@ -205,234 +161,92 @@ class HeroMap {
 }
 
 class Hero {
-	level: number = 1;
 
-	isInTeam: boolean = false;
-
+	dirtyFlag:boolean = true;
 	property:HeroProperty;
-
-	basicAttFactor: number = 1;
-	strFactor: number = 1;
-	agiFactor: number = 1;
-	intFactor: number = 1;
-	endFactor: number = 1;
-
-	dirtyFlag: boolean = true;
-
-	equipments: Equipment[] = [];
-
-	public constructor(type: number) {
-
-		this.basicAttFactor = heroConfig[type].basicattack;
-		this.strFactor = heroConfig[type].strength;
-		this.agiFactor = heroConfig[type].agility;
-		this.intFactor = heroConfig[type].intelligence;
-		this.endFactor = heroConfig[type].endurance;
-
+	isInTeam:boolean = false;
+	equipments:Equipment[] = [];
+    
+	public constructor(type:number) {
+		this.property = new HeroProperty(heroConfig[type].id,heroConfig[type].name,heroConfig[type].attack,heroConfig[type].strength,
+									 heroConfig[type].agility,heroConfig[type].intelligence,
+									 heroConfig[type].endurance);
 	}
 
-	public setInTeam(status: boolean) {
-
+	public setInTeam(status:boolean):void {
 		this.isInTeam = status;
-		this.dirtyFlag = true;
-
 	}
 
-	@this.basicattackCache
-	get basicattack(): number {
-		return this.level * 3* this.basicAttFactor;
-
+	public equip(equipment:Equipment):void {
+		this.equipments.push(equipment);
 	}
 
-	@this.maxhpCache
-	get maxhp(): number {
-		return this.level * 2 * this.endurance;
-	}
-
-	@this.maxmpCache
-	get maxmp(): number {
-		return this.level * this.intelligence;
-	}
-
-	@this.defenceCacheCache
-	get defence(): number {
-		return this.level * this.endurance*3;
-	}
-
-	@this.strengthCache
-	get strength(): number {
-		return this.level * this.strFactor*2;
-	}
-
-	@this.intelligenceCache
-	get intelligence(): number {
-		return this.level * this.intFactor*2;
-	}
-
-	@this.agilityCache
-	get agility(): number {
-		return this.level * this.agiFactor*2;
-	}
-
-	@this.enduranceCache
-	get endurance(): number {
-		return this.level *this.endFactor*5;
-	}
-
-	@this.attackCache
-	get attack(): number {
-		return this.basicattack + this.strength;
-	}
-
-	@this.fightpowerCache
-	get FightPower(): number {
-
-		var result = 0;
-
-		this.equipments.forEach(e => result += e.FightPower)
-
-		result += this.attack * 1.5 + this.defence + (this.maxhp + this.maxmp * 0.5) *0.5;
+	get fightPower():number {
+		var result:number = 0;
+		this.equipments.forEach(equipment => {
+			result += equipment.FightPower;
+		});
+		result += this.property.fightPower;
 
 		return result;
-
 	}
+
+	get attack():number {
+		var result:number = 0;
+		this.equipments.forEach(equipment => {
+			result += equipment.attack;
+		});
+		result += this.property.basic_Attack;
+
+		return result;
+	}
+
+	get strength():number {
+		var result:number = 0;
+		this.equipments.forEach(equipment => {
+			result += equipment.strength;
+		});
+		result += this.property.basic_Strength;
+
+		return result;
+	}
+
+	get agility():number {
+		var result:number = 0;
+		this.equipments.forEach(equipment => {
+			result += equipment.agility;
+		});
+		result += this.property.basic_Agility;
+
+		return result;
+	}
+
+	get intelligence():number {
+		var result:number = 0;
+		this.equipments.forEach(equipment => {
+			result += equipment.intelligence;
+		});
+		result += this.property.basic_Intelligence;
+
+		return result;
+	}
+
+	get endurance():number {
+		var result:number = 0;
+		this.equipments.forEach(equipment => {
+			result += equipment.endurance;
+		});
+		result += this.property.basic_Endurance;
+
+		return result;
+	}
+
 	get maxHp():number {
-		return this.level * 50;
+		return this.endurance * 50;
 	}
 
 	get maxMp():number {
 		return this.intelligence * 40;
-	}
-
-
-	basicattackCache: MethodDecorator = (target: any, propertyName, desc: PropertyDescriptor) => {
-
-		if (!this.dirtyFlag) {
-			const getter = desc.get;
-			desc.get = function () {
-				return getter.apply(this);
-			}
-
-			return desc;
-		}
-
-	}
-
-	maxhpCache: MethodDecorator = (target: any, propertyName, desc: PropertyDescriptor) => {
-
-		if (!this.dirtyFlag) {
-			const getter = desc.get;
-			desc.get = function () {
-				return getter.apply(this);
-			}
-
-			return desc;
-		}
-
-	}
-
-	maxmpCache: MethodDecorator = (target: any, propertyName, desc: PropertyDescriptor) => {
-
-		if (!this.dirtyFlag) {
-			const getter = desc.get;
-			desc.get = function () {
-				return getter.apply(this);
-			}
-
-			return desc;
-		}
-
-	}
-
-	defenceCache: MethodDecorator = (target: any, propertyName, desc: PropertyDescriptor) => {
-
-		if (!this.dirtyFlag) {
-			const getter = desc.get;
-			desc.get = function () {
-				return getter.apply(this);
-			}
-
-			return desc;
-		}
-
-	}
-
-	strengthCache: MethodDecorator = (target: any, propertyName, desc: PropertyDescriptor) => {
-
-		if (!this.dirtyFlag) {
-			const getter = desc.get;
-			desc.get = function () {
-				return getter.apply(this);
-			}
-
-			return desc;
-		}
-
-	}
-
-	intelligenceCache: MethodDecorator = (target: any, propertyName, desc: PropertyDescriptor) => {
-
-		if (!this.dirtyFlag) {
-			const getter = desc.get;
-			desc.get = function () {
-				return getter.apply(this);
-			}
-
-			return desc;
-		}
-
-	}
-
-	agilityCache: MethodDecorator = (target: any, propertyName, desc: PropertyDescriptor) => {
-
-		if (!this.dirtyFlag) {
-			const getter = desc.get;
-			desc.get = function () {
-				return getter.apply(this);
-			}
-
-			return desc;
-		}
-
-	}
-
-	enduranceCache: MethodDecorator = (target: any, propertyName, desc: PropertyDescriptor) => {
-
-		if (!this.dirtyFlag) {
-			const getter = desc.get;
-			desc.get = function () {
-				return getter.apply(this);
-			}
-
-			return desc;
-		}
-
-	}
-
-	attackCache: MethodDecorator = (target: any, propertyName, desc: PropertyDescriptor) => {
-
-		if (!this.dirtyFlag) {
-			const getter = desc.get;
-			desc.get = function () {
-				return getter.apply(this);
-			}
-
-			return desc;
-		}
-
-	}
-
-	fightpowerCache: MethodDecorator = (target: any, propertyName, desc: PropertyDescriptor) => {
-
-		if (!this.dirtyFlag) {
-			const getter = desc.get;
-			desc.get = function () {
-				return getter.apply(this);
-			}
-
-			return desc;
-		}
-
 	}
 
 }
